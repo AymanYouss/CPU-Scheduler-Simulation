@@ -1,0 +1,109 @@
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  font-family: 'Arial', sans-serif;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 1em 0;
+  text-align: center;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2em;
+}
+
+.navbar div, .navbar nav {
+  flex: 1;
+}
+
+.navbar nav {
+  text-align: right;
+}
+
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.navbar a.active {
+  border-bottom: 2px solid #fff;
+}
+
+h1 {
+  text-align: center;
+  margin: 1em 0;
+}
+
+.scheduler-form {
+  width: 90%;
+  margin: 0 auto;
+}
+
+#processes-container {
+  margin-bottom: 1em;
+}
+
+.process-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5em;
+}
+
+.process-row input {
+  padding: 0.5em;
+  margin-right: 0.5em;
+}
+
+.form-controls {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+button {
+  padding: 0.5em 1em;
+  margin-right: 0.5em;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #ddd;
+}
+
+#output-container {
+  width: 90%;
+  margin: 2em auto;
+  padding: 1em;
+  background-color: #f8f8f8;
+  border: 1px solid #eaeaea;
+}
+
+#gantt-chart {
+  width: 100%;
+  height: 150px; /* Adjust as needed */
+  margin-top: 1em;
+  position: relative; /* For absolute positioning of bars */
+}
+
+footer {
+  text-align: center;
+  padding: 1em 0;
+  background-color: #333;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
