@@ -8,14 +8,16 @@
 </head>
 <body>
     <header>
-        <div class="navbar">
-            <div>OS LAB</div>
-            <nav>
-                <a href="#" class="active">HOME</a>
-                <a href="#">DOCS</a>
-                <a href="#">SIMULATOR</a>
-            </nav>
-        </div>
+        <!-- Bootstrap navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="#">OS LAB</a>
+            <div id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link active" href="index.html">Home</a>
+                    <a class="nav-link" href="about.html">About</a>
+                </div>
+            </div>
+        </nav>
     </header>
     <main>
         <h1>CPU Scheduler Simulator</h1>
@@ -24,25 +26,29 @@
                 <!-- Process rows will be added here by script.js -->
             </div>
             <div class="form-controls">
-                <label for="algorithm-select">Algorithm:</label>
-                <select id="algorithm-select">
+                <label for="algorithm-select" class="label">Algorithm:</label>
+                <select id="algorithm-select" class="select">
                     <option value="FCFS">FCFS</option>
                     <option value="SJF">SJF</option>
                     <option value="Priority">Priority</option>
+                    <option value="Round Robin">Round Robin</option>
+                    <option value="Priority Round Robin">Priority Round Robin</option>
                 </select>
-                <button id="add-process">Add Process</button>
-                <button id="run">Run</button>
-                <button id="reset">Reset</button>
+                <button id="add-process" class="button">Add Process</button>
+                <button id="run" class="button">Run</button>
+                <button id="reset" class="button">Reset</button>
             </div>
         </div>
         <div id="output-container">
             <h2>Output Table</h2>
-            <div id="gantt-chart"> <!-- Gantt chart will be displayed here --> </div>
+            <div id="results-table"></div>
+            <div id="gantt-chart"></div>
         </div>
     </main>
-    <footer>
-        <p>&copy; 2024 OS LAB. All rights reserved.</p>
+    <footer class="footer mt-auto py-3 bg-primary text-white text-center">
+        <p>&copy; 2024 Operating Systems Assignment 1 College of Computing. All rights reserved.</p>
     </footer>
+    <script src="https://kit.fontawesome.com/yourkit.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

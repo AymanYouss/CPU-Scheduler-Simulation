@@ -12,6 +12,8 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 const fcfsScheduling = require('./scheduling/FCFSScheduling');
 const sjfScheduling = require('./scheduling/SJFScheduling');
 const priorityScheduling = require('./scheduling/PriorityScheduling');
+const roundRobinScheduling = require('./scheduling/RoundRobinScheduling');
+const priorityRoundRobinScheduling = require('./scheduling/PriorityRoundRobinScheduling.js');
 
 app.post('/simulate', (req, res) => {
     const { processes, algorithm } = req.body;
@@ -26,6 +28,12 @@ app.post('/simulate', (req, res) => {
             break;
         case 'Priority':
             result = priorityScheduling(processes);
+            break;
+        case 'Round Robin':
+            result = roundRobinScheduling(processes);
+            break;
+        case 'Priority Round Robin':
+            result = priorityRoundRobinScheduling(processes);
             break;
         default:
             res.status(400).send('Unknown algorithm');

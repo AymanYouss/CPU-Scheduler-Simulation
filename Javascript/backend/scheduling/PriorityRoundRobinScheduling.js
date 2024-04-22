@@ -8,7 +8,7 @@ function priorityRoundRobinScheduling(processes, timeQuanta) {
     while (processes.length > 0) {
         let process = processes.shift();
 
-        if (process.start_time === null || process.start_time < current_time) {
+        if (process.start_time === undefined || process.start_time < current_time) {
             process.start_time = current_time;
         }
 
@@ -22,11 +22,28 @@ function priorityRoundRobinScheduling(processes, timeQuanta) {
             process.waitingTime = process.turnaroundTime - process.burstTime;
             completed_processes.push(process);
         } else {
-            processes.push(process); // Re-queue the process at the end
+            // Maintain priority order when re-queueing
+            let index = processes.findIndex(p => p.arrivalTime > current_time || (p.arrivalTime === current_time && p.priority > process.priority));
+            if (index === -1) {
+                processes.push(process);
+            } else {
+                processes.splice(index, 0, process);
+            }
         }
     }
 
-    return completed_processes;
+    // Calculate average waiting and turnaround times
+    let totalWaitingTime = completed_processes.reduce((acc, curr) => acc + curr.waitingTime, 0);
+    let totalTurnaroundTime = completed_processes.reduce((acc, curr) => acc + curr.turnaroundTime, 0);
+    let averageWaitingTime = totalWaitingTime / completed_processes.length;
+    let averageTurnaroundTime = totalTurnaroundTime / completed_processes.length;
+
+    console.log("Process Execution Order:");
+    completed_processes.forEach(process => console.log(`${process.pid}: Waiting Time = ${process.waitingTime}, Turnaround Time = ${process.turnaroundTime}`));
+    console.log(`\nAverage Waiting Time: ${averageWaitingTime.toFixed(2)}`);
+    console.log(`Average Turnaround Time: ${averageTurnaroundTime.toFixed(2)}`);
+
+    return { completed_processes, averageWaitingTime, averageTurnaroundTime };
 }
 
 module.exports = priorityRoundRobinScheduling;
