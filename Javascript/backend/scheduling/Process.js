@@ -10,7 +10,7 @@ class Process {
   }
 
   toString() {
-      return `Process(pid=${this.pid}, arrivalTime=${this.arrivalTime}, burstTime=${this.burstTime}, priority=${this.priority})`;
+      return `Process(pid=${this.pid}, arrivalTime=${this.arrivalTime}, burstTime=${this.burstTime}, priority=${this.priority}, remainingBurstTime=${this.remainingBurstTime})`;
   }
 }
 

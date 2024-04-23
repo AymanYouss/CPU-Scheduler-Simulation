@@ -1,6 +1,7 @@
 const { Process } = require('./Process');
 
-function roundRobinScheduling(processList, timeQuanta = 1) {
+function roundRobinScheduling(processList, timeQuanta = 2) {
+    console.log(processList);
     let t = 0;
     let gantt = [];
     let completed = [];
@@ -9,6 +10,7 @@ function roundRobinScheduling(processList, timeQuanta = 1) {
 
     while (processList.length > 0) {
         let available = processList.filter(p => p.arrivalTime <= t);
+        console.log(t);
 
         if (available.length === 0) {
             gantt.push("Idle");
@@ -46,7 +48,7 @@ function roundRobinScheduling(processList, timeQuanta = 1) {
     console.log(`\nAverage Waiting Time: ${averageWaitingTime.toFixed(2)}`);
     console.log(`Average Turnaround Time: ${averageTurnaroundTime.toFixed(2)}`);
 
-    return { gantt, completed, averageWaitingTime, averageTurnaroundTime };
+    return completed;
 }
 
 module.exports = roundRobinScheduling;

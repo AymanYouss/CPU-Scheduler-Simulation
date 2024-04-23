@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <input type="number" placeholder="Arrival Time" min="0" step="1" required>
             <input type="number" placeholder="Burst Time" min="1" step="1" required>
         `;
-        if (["Round Robin", "Priority Round Robin"].includes(algorithmSelect.value)) {
+        if (["Priority", "Priority Round Robin"].includes(algorithmSelect.value)) {
             row.innerHTML += `<input type="number" placeholder="Priority" min="1" step="1" required>`;
         }
         processesContainer.appendChild(row);
@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 pid: row.children[0].value,
                 arrivalTime: parseInt(row.children[1].value, 10),
                 burstTime: parseInt(row.children[2].value, 10),
+                remainingBurstTime:parseInt(row.children[2].value, 10),
             };
             if (row.children.length > 3) {
                 process.priority = parseInt(row.children[3].value, 10);
@@ -39,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function displayResults(data) {
 
-        
+        console.log("ana dkhelt hna");
         // Clear previous results
         resultsTable.innerHTML = '';
         ganttChart.innerHTML = '';
@@ -124,6 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function runSimulation() {
         const processData = collectProcessData();
         const selectedAlgorithm = algorithmSelect.value;
+        console.log(selectedAlgorithm.value);
+        console.log(processData);
 
         fetch('/simulate', {
             method: 'POST',

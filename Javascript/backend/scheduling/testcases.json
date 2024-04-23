@@ -1,0 +1,23 @@
+{
+    "roundRobin": {
+      "input": [
+        {"pid": "P1", "arrivalTime": 0, "burstTime": 5},
+        {"pid": "P2", "arrivalTime": 1, "burstTime": 3},
+        {"pid": "P3", "arrivalTime": 2, "burstTime": 1},
+        {"pid": "P4", "arrivalTime": 3, "burstTime": 2},
+        {"pid": "P5", "arrivalTime": 4, "burstTime": 3}
+      ],
+      "timeQuanta": 2,
+      "expected": {
+        "ganttChart": ["P1", "P2", "P3", "P4", "P5", "P1", "P2", "P5", "P1"],
+        "results": [
+          {"pid": "P1", "completionTime": 14, "turnaroundTime": 14, "waitingTime": 9},
+          {"pid": "P2", "completionTime": 12, "turnaroundTime": 11, "waitingTime": 8},
+          {"pid": "P3", "completionTime": 5, "turnaroundTime": 3, "waitingTime": 2},
+          {"pid": "P4", "completionTime": 7, "turnaroundTime": 4, "waitingTime": 2},
+          {"pid": "P5", "completionTime": 13, "turnaroundTime": 9, "waitingTime": 6}
+        ]
+      }
+    }
+  }
+  
