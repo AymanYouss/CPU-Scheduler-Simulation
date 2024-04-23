@@ -1,6 +1,9 @@
 const fs = require('fs');
 const { Process } = require('./Process');
 const roundRobinScheduling = require('./RoundRobinScheduling');
+const priorityScheduling = require('./PriorityScheduling');
+const sjfScheduling = require('./SJFScheduling');
+const fcfsScheduling = require('./FCFSScheduling');
 
 function loadTestCases() {
     const rawData = fs.readFileSync('testcases.json');
@@ -9,11 +12,11 @@ function loadTestCases() {
 
 function checkResults(actual, expected) {
     console.log("Checking results...");
-    const actualResults = actual.completed.map(p => ({
+    const actualResults = actual.map(p => ({
         pid: p.pid,
         completionTime: p.completionTime,
         turnaroundTime: p.completionTime - p.arrivalTime,
-        waitingTime: p.start_time - p.arrivalTime
+        waitingTime: p.waitingTime
     }));
 
     const errors = [];
@@ -43,4 +46,27 @@ function testRoundRobin() {
     checkResults(actual, testCases.expected.results);
 }
 
-testRoundRobin();
+function testSchedulingAlgorithm(algorithm, algorithmFunction) {
+    const testCases = loadTestCases()[algorithm];
+    const processes = testCases.input.map(p => new Process(p.pid, p.arrivalTime, p.burstTime, p.priority, p.waitingTime));
+    const results = algorithmFunction(processes);
+    checkResults(results, testCases.expected.results);
+}
+
+function main() {
+    console.log("Testing Round Robin Scheduling...");
+    testSchedulingAlgorithm('roundRobin', roundRobinScheduling);
+
+    console.log("Testing Priority Scheduling...");
+    testSchedulingAlgorithm('priority', priorityScheduling);
+
+    console.log("Testing Shortest Job First Scheduling...");
+    testSchedulingAlgorithm('sjf', sjfScheduling);
+
+    console.log("Testing First-Come, First-Serve Scheduling...");
+    testSchedulingAlgorithm('fcfs', fcfsScheduling);
+}
+
+// testRoundRobin();
+console.log("-----------------------------");
+main();

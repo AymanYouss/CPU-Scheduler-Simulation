@@ -7,7 +7,7 @@ function fcfsScheduling(processes) {
     let totalWaitingTime = 0;
     let totalTurnaroundTime = 0;
 
-    console.log("Process Execution Order:");
+    // console.log("Process Execution Order:");
     processes.forEach(process => {
         if (currentTime < process.arrivalTime) {
             currentTime = process.arrivalTime;
@@ -22,14 +22,14 @@ function fcfsScheduling(processes) {
         totalWaitingTime += process.waitingTime;
         totalTurnaroundTime += process.turnaroundTime;
 
-        console.log(process.toString());
+        // console.log(process.toString());
     });
 
     let averageWaitingTime = totalWaitingTime / processes.length;
     let averageTurnaroundTime = totalTurnaroundTime / processes.length;
 
-    console.log(`\nAverage Waiting Time: ${averageWaitingTime.toFixed(2)}`);
-    console.log(`Average Turnaround Time: ${averageTurnaroundTime.toFixed(2)}`);
+    // console.log(`\nAverage Waiting Time: ${averageWaitingTime.toFixed(2)}`);
+    // console.log(`Average Turnaround Time: ${averageTurnaroundTime.toFixed(2)}`);
 
     return processes;
 }
@@ -39,4 +39,4 @@ module.exports = fcfsScheduling;
 
 // Example usage
 const processes = generateRandomProcesses(5, [1, 5], [5, 15]);
-console.log(fcfsScheduling(processes));
+// console.log(fcfsScheduling(processes));

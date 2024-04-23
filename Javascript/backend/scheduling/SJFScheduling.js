@@ -38,16 +38,16 @@ function sjfScheduling(processes) {
     let averageWaitingTime = totalWaitingTime / completedProcesses.length;
     let averageTurnaroundTime = totalTurnaroundTime / completedProcesses.length;
 
-    console.log("Process Execution Order:");
-    completedProcesses.forEach(process => console.log(process.toString()));
-    console.log(`\nAverage Waiting Time: ${averageWaitingTime.toFixed(2)}`);
-    console.log(`Average Turnaround Time: ${averageTurnaroundTime.toFixed(2)}`);
+    // console.log("Process Execution Order:");
+    // completedProcesses.forEach(process => console.log(process.toString()));
+    // console.log(`\nAverage Waiting Time: ${averageWaitingTime.toFixed(2)}`);
+    // console.log(`Average Turnaround Time: ${averageTurnaroundTime.toFixed(2)}`);
 
     return completedProcesses;
 }
 
 // Example usage
 const processes = generateRandomProcesses(5, [1, 5], [5, 15]);
-console.log(sjfScheduling(processes));
+// console.log(sjfScheduling(processes));
 
 module.exports = sjfScheduling;

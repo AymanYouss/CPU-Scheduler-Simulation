@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 arrivalTime: parseInt(row.children[1].value, 10),
                 burstTime: parseInt(row.children[2].value, 10),
                 remainingBurstTime:parseInt(row.children[2].value, 10),
+                
             };
             if (row.children.length > 3) {
                 process.priority = parseInt(row.children[3].value, 10);
