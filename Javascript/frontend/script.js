@@ -408,50 +408,130 @@ function displayChart(canvasId, label, data, chartLabel) {
     //         return process;
     //     });
     // }
-
+//--------------------------------------------------------------------------------------------------
   
-        document.getElementById('load-file').addEventListener('click', function() {
-            const fileInput = document.getElementById('file-input');
-            const file = fileInput.files[0];
-            console.log(file);
-            if (file) {
-                console.log("Logaqsdfdsfds");
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const contents = e.target.result;
-                    const processes = parseFile(contents);
-                    console.log(processes);
-                    fillProcessForm(processes);
-                };
-                reader.readAsText(file);
-            } else {
-                alert('Please select a file.');
-                console.log("Makaynsh file");
-            }
-        });
+    //     document.getElementById('load-file').addEventListener('click', function() {
+    //         const fileInput = document.getElementById('file-input');
+    //         const file = fileInput.files[0];
+    //         console.log(file);
+    //         if (file) {
+    //             console.log("Logaqsdfdsfds");
+    //             const reader = new FileReader();
+    //             reader.onload = function(e) {
+    //                 const contents = e.target.result;
+    //                 const processes = parseFile(contents);
+    //                 console.log(processes);
+    //                 fillProcessForm(processes);
+    //             };
+    //             reader.readAsText(file);
+    //         } else {
+    //             alert('Please select a file.');
+    //             console.log("Makaynsh file");
+    //         }
+    //     });
     
-        document.getElementById('algorithm-select').addEventListener('change', function() {
+    //     document.getElementById('algorithm-select').addEventListener('change', function() {
+    //         const timeQuantumContainer = document.getElementById('time-quantum-container');
+    //         if (this.value === 'Round Robin') {
+    //             timeQuantumContainer.style.display = 'block';
+    //         } else {
+    //             timeQuantumContainer.style.display = 'none';
+    //         }
+    //     });
+    
+    
+    // function parseFile(contents) {
+    //     const lines = contents.trim().split('\n');
+    //     lines.shift(); // Skip the header line
+    //     return lines.map(line => {
+    //         const parts = line.split(',');
+    //         return {
+    //             pid: parts[0].trim(),
+    //             arrivalTime: parts[1].trim(),
+    //             burstTime: parts[2].trim(),
+    //             priority: parts[3] ? parts[3].trim() : undefined
+    //         };
+    //     });
+    // }
+    
+    // function fillProcessForm(processes) {
+    //     const container = document.getElementById('processes-container');
+    //     container.innerHTML = ''; // Clear existing entries
+    //     processes.forEach((process, index) => {
+    //         addProcessToForm(process, index + 1);
+    //     });
+    // }
+    
+    // function addProcessToForm(process, index) {
+    //     const row = document.createElement('div');
+    //     row.className = 'process-row';
+    //     row.innerHTML = `
+    //         <input type="text" placeholder="Process ID" value="${process.pid}" readonly>
+    //         <input type="number" placeholder="Arrival Time" value="${process.arrivalTime}" min="0" step="1" required>
+    //         <input type="number" placeholder="Burst Time" value="${process.burstTime}" min="1" step="1" required>
+    //         ${process.priority ? `<input type="number" placeholder="Priority" value="${process.priority}" min="1" step="1" required>` : ''}
+    //     `;
+    //     processesContainer.appendChild(row);
+    // }
+
+    document.getElementById('load-file').addEventListener('click', function() {
+        const fileInput = document.getElementById('file-input');
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const contents = e.target.result;
+                const {algorithm, processes} = parseFile(contents);
+                console.log(processes);
+                setAlgorithm(algorithm); // Set the algorithm dropdown based on the file
+                fillProcessForm(processes);
+            };
+            reader.readAsText(file);
+        } else {
+            alert('Please select a file.');
+        }
+    });
+    
+    function setAlgorithm(algorithm) {
+        const algorithmMapping = {
+            'FCFS': 'FCFS',
+            'SJF': 'SJF',
+            'Priority': 'Priority',
+            'RR': 'Round Robin',  // Assuming 'RR' stands for 'Round Robin'
+            'PR': 'Priority Round Robin'  // Example if you have a Priority Round Robin
+        };
+    
+        const algorithmSelect = document.getElementById('algorithm-select');
+        const selectedAlgorithm = algorithmMapping[algorithm];  // Map the file abbreviation to the select option value
+    
+        if (selectedAlgorithm) {
+            algorithmSelect.value = selectedAlgorithm;
             const timeQuantumContainer = document.getElementById('time-quantum-container');
-            if (this.value === 'Round Robin') {
+            // Display time quantum input only if Round Robin is selected
+            if (selectedAlgorithm === 'Round Robin') {
                 timeQuantumContainer.style.display = 'block';
             } else {
                 timeQuantumContainer.style.display = 'none';
             }
-        });
-    
+        } else {
+            console.error('Unsupported algorithm type specified in file.');
+            alert('Unsupported algorithm type specified in file.');
+        }
+    }
     
     function parseFile(contents) {
         const lines = contents.trim().split('\n');
-        lines.shift(); // Skip the header line
-        return lines.map(line => {
+        const algorithm = lines.shift().trim(); // First line is the algorithm type
+        const processes = lines.map(line => {
             const parts = line.split(',');
             return {
                 pid: parts[0].trim(),
                 arrivalTime: parts[1].trim(),
                 burstTime: parts[2].trim(),
-                priority: parts[3] ? parts[3].trim() : undefined
+                priority: parts.length > 3 ? parts[3].trim() : undefined // Check for presence of priority
             };
         });
+        return { algorithm, processes };
     }
     
     function fillProcessForm(processes) {
@@ -473,6 +553,7 @@ function displayChart(canvasId, label, data, chartLabel) {
         `;
         processesContainer.appendChild(row);
     }
+    
     
     
 });
