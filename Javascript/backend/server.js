@@ -16,7 +16,7 @@ const roundRobinScheduling = require('./scheduling/RoundRobinScheduling');
 const priorityRoundRobinScheduling = require('./scheduling/PriorityRoundRobinScheduling.js');
 
 app.post('/simulate', (req, res) => {
-    const { processes, algorithm } = req.body;
+    const { processes, algorithm, timeQuantum } = req.body;
     let result;
 
     switch (algorithm) {
@@ -30,7 +30,7 @@ app.post('/simulate', (req, res) => {
             result = priorityScheduling(processes);
             break;
         case 'Round Robin':
-            result = roundRobinScheduling(processes);
+            result = roundRobinScheduling(processes, timeQuantum);
             break;
         case 'Priority Round Robin':
             result = priorityRoundRobinScheduling(processes);

@@ -1,25 +1,22 @@
 const { Process } = require('./Process');
 
-function roundRobinScheduling(processList, timeQuanta = 2) {
-    // console.log(processList);
+function roundRobinScheduling(processList, timeQuanta) {
     let t = 0;
-    let gantt = [];
     let completed = [];
+    let history = [];
+    let totalWaitingTime = 0;
+    let totalTurnaroundTime = 0;
 
     processList.sort((a, b) => a.arrivalTime - b.arrivalTime);
 
     while (processList.length > 0) {
         let available = processList.filter(p => p.arrivalTime <= t);
-        // console.log(t);
-
         if (available.length === 0) {
-            gantt.push("Idle");
             t++;
             continue;
         }
 
         let process = available[0];
-        gantt.push(process.pid);
         processList = processList.filter(p => p.pid !== process.pid);
 
         let executionTime = Math.min(process.remainingBurstTime, timeQuanta);
@@ -32,23 +29,22 @@ function roundRobinScheduling(processList, timeQuanta = 2) {
             process.turnaroundTime = process.completionTime - process.arrivalTime;
             process.waitingTime = process.start_time - process.arrivalTime;
             completed.push(process);
+
+            totalWaitingTime += process.waitingTime;
+            totalTurnaroundTime += process.turnaroundTime;
+
+            history.push({
+                time: t,
+                avgWaitingTime: totalWaitingTime / completed.length,
+                avgTurnaroundTime: totalTurnaroundTime / completed.length
+            });
         } else {
-            processList.push(process);
+            processList.push(process); // Re-enqueue the process if it still has remaining burst time
         }
     }
 
-    // Calculate average waiting and turnaround times
-    let totalWaitingTime = completed.reduce((acc, curr) => acc + curr.waitingTime, 0);
-    let totalTurnaroundTime = completed.reduce((acc, curr) => acc + curr.turnaroundTime, 0);
-    let averageWaitingTime = totalWaitingTime / completed.length;
-    let averageTurnaroundTime = totalTurnaroundTime / completed.length;
-
-    // console.log("Process Execution Order:");
-    // completed.forEach(process => console.log(process.toString()));
-    // console.log(`\nAverage Waiting Time: ${averageWaitingTime.toFixed(2)}`);
-    // console.log(`Average Turnaround Time: ${averageTurnaroundTime.toFixed(2)}`);
-
-    return completed;
+    // Return both the processes and the history for plotting
+    return { processes: completed, history };
 }
 
 module.exports = roundRobinScheduling;

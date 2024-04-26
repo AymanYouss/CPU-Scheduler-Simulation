@@ -8,6 +8,7 @@ function sjfScheduling(processes) {
     let readyQueue = [];
     let totalWaitingTime = 0;
     let totalTurnaroundTime = 0;
+    let history = []; // This will store the state after each process is scheduled
 
     while (processes.length > 0 || readyQueue.length > 0) {
         while (processes.length > 0 && processes[0].arrivalTime <= currentTime) {
@@ -30,20 +31,19 @@ function sjfScheduling(processes) {
         currentTime = currentProcess.completionTime;
 
         completedProcesses.push(currentProcess);
-
         totalWaitingTime += currentProcess.waitingTime;
         totalTurnaroundTime += currentProcess.turnaroundTime;
+
+        // Record the cumulative average at each step
+        history.push({
+            time: currentTime,
+            avgWaitingTime: totalWaitingTime / completedProcesses.length,
+            avgTurnaroundTime: totalTurnaroundTime / completedProcesses.length
+        });
     }
 
-    let averageWaitingTime = totalWaitingTime / completedProcesses.length;
-    let averageTurnaroundTime = totalTurnaroundTime / completedProcesses.length;
-
-    // console.log("Process Execution Order:");
-    // completedProcesses.forEach(process => console.log(process.toString()));
-    // console.log(`\nAverage Waiting Time: ${averageWaitingTime.toFixed(2)}`);
-    // console.log(`Average Turnaround Time: ${averageTurnaroundTime.toFixed(2)}`);
-
-    return completedProcesses;
+    // Return both the processes and the history for plotting
+    return { processes: completedProcesses, history };
 }
 
 // Example usage

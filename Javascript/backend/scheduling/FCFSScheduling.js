@@ -2,13 +2,12 @@ const { Process, generateRandomProcesses } = require('./Process');
 
 function fcfsScheduling(processes) {
     processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
-
     let currentTime = 0;
     let totalWaitingTime = 0;
     let totalTurnaroundTime = 0;
+    let history = [];
 
-    // console.log("Process Execution Order:");
-    processes.forEach(process => {
+    processes.forEach((process, index) => {
         if (currentTime < process.arrivalTime) {
             currentTime = process.arrivalTime;
         }
@@ -22,21 +21,21 @@ function fcfsScheduling(processes) {
         totalWaitingTime += process.waitingTime;
         totalTurnaroundTime += process.turnaroundTime;
 
-        // console.log(process.toString());
+        // Record the cumulative average at each step
+        history.push({
+            time: currentTime,
+            avgWaitingTime: totalWaitingTime / (index + 1),
+            avgTurnaroundTime: totalTurnaroundTime / (index + 1)
+        });
     });
 
-    let averageWaitingTime = totalWaitingTime / processes.length;
-    let averageTurnaroundTime = totalTurnaroundTime / processes.length;
-
-    // console.log(`\nAverage Waiting Time: ${averageWaitingTime.toFixed(2)}`);
-    // console.log(`Average Turnaround Time: ${averageTurnaroundTime.toFixed(2)}`);
-
-    return processes;
+    return { processes, history };
 }
+
 
 
 module.exports = fcfsScheduling;
 
 // Example usage
-const processes = generateRandomProcesses(5, [1, 5], [5, 15]);
+// const processes = generateRandomProcesses(5, [1, 5], [5, 15]);
 // console.log(fcfsScheduling(processes));
