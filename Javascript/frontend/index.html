@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OS Lab - CPU Scheduler Simulator</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
     <header>
@@ -37,7 +39,16 @@
                 <button id="add-process" class="button">Add Process</button>
                 <button id="run" class="button">Run</button>
                 <button id="reset" class="button">Reset</button>
+                <div id="time-quantum-container" style="display: none;">
+                    <label for="time-quantum" class="label">Time Quantum:</label>
+                    <input type="number" id="time-quantum" class="input" min="1" value="2" required>
+                </div>
             </div>
+            <div class="file-upload">
+                <input type="file" id="file-input" accept=".txt">
+                <button id="load-file" class="button">Load Processes</button>
+            </div>
+            
         </div>
         <div id="output-container">
             <h2>Output Table</h2>
@@ -45,10 +56,42 @@
             <div id="gantt-chart"></div>
         </div>
     </main>
+    <div id="charts-container" class="charts-container">
+        <div class="chart">
+            <h3>Waiting Time for Processes</h3>
+            <canvas id="waiting-time-chart"></canvas>
+        </div>
+        <div class="chart">
+            <h3>Turnaround Time for Processes</h3>
+            <canvas id="turnaround-time-chart"></canvas>
+        </div>
+    </div>
+    
+    <div id="additional-charts-container" class="charts-container">
+        <div class="chart">
+            <h3>Waiting Time (Detailed)</h3>
+            <canvas id="waiting-time-chart2"></canvas>
+            <p id="av11">Average: <span id="av1"></span></p>
+        </div>
+        <div class="chart">
+            <h3>Turnaround Time (Detailed)</h3>
+            <canvas id="turnaround-time-chart2"></canvas>
+            <p id="av21">Average: <span id="av2"></span></p>
+        </div>
+        <div class="chart">
+            <h3>Completion Time</h3>
+            <canvas id="completion-time-chart2"></canvas>
+            <p id="av31">Average: <span id="av3"></span></p>
+        </div>
+    </div>
+    
+    
+
+
+    </div>
     <!-- <footer class="footer mt-auto py-3 bg-primary text-white text-center">
         <p>&copy; 2024 Operating Systems Assignment 1 College of Computing. All rights reserved.</p>
     </footer> -->
-    <script src="https://kit.fontawesome.com/yourkit.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
