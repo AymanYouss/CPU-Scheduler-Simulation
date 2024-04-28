@@ -11,8 +11,7 @@
 4. [Running the Project](#running-the-project)
 5. [Algorithm Testing and Performance Metrics](#algorithm-testing-and-performance-metrics)
 6. [Customization Options](#customization-options)
-7. [Testing and Examples](#testing-and-examples)
-8. [Conclusion](#conclusion)
+7. [Conclusion](#conclusion)
 
 ## Overview
 This project simulates various CPU scheduling algorithms to analyze their performance in managing system resources. Initially started in Python, the project was transitioned to JavaScript to leverage specific libraries and frameworks for better interactive visualizations and performance analysis.
@@ -108,9 +107,6 @@ These visual tools not only aid in verifying the correctness of the algorithm's 
 
 Describe how users can customize the simulation, including choosing the number of processes, setting burst and arrival time ranges, and selecting scheduling algorithms.
 
-## Testing and Examples
-
-Provide examples of test cases and input data used to validate the correctness of the scheduling algorithms. Include screenshots or logs that demonstrate the test results.
 
 ## Conclusion
 
