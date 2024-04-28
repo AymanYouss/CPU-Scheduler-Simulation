@@ -9,9 +9,9 @@ class Process {
       this.completionTime = null;
   }
 
-  toString() {
-      return `Process(pid=${this.pid}, arrivalTime=${this.arrivalTime}, burstTime=${this.burstTime}, priority=${this.priority}, remainingBurstTime=${this.remainingBurstTime})`;
-  }
+toString() {
+    return `Process(pid=${this.pid}, arrivalTime=${this.arrivalTime}, burstTime=${this.burstTime}, priority=${this.priority}, remainingBurstTime=${this.remainingBurstTime})`;
+}
 }
 
 function generateRandomProcesses(numProcesses, arrivalTimeRange, burstTimeRange, priorityRange = null) {
