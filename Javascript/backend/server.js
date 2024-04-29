@@ -1,19 +1,22 @@
+// server.js
 const express = require('express');
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const path = require('path');
+
+const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '../frontend')));
-
+// Importing scheduling functions
 const fcfsScheduling = require('./scheduling/FCFSScheduling');
 const sjfScheduling = require('./scheduling/SJFScheduling');
 const priorityScheduling = require('./scheduling/PriorityScheduling');
 const roundRobinScheduling = require('./scheduling/RoundRobinScheduling');
-const priorityRoundRobinScheduling = require('./scheduling/PriorityRoundRobinScheduling.js');
+const { PriorityRoundRobinScheduler } = require('./scheduling/PriorityRoundRobinScheduling');
+
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 app.post('/simulate', (req, res) => {
     const { processes, algorithm, timeQuantum } = req.body;
@@ -33,14 +36,23 @@ app.post('/simulate', (req, res) => {
             result = roundRobinScheduling(processes, timeQuantum);
             break;
         case 'Priority Round Robin':
-            result = priorityRoundRobinScheduling(processes);
+            const scheduler = new PriorityRoundRobinScheduler(processes);
+            result = {
+                processes: scheduler.scheduleProcesses(processes),
+                history: []  // Assuming you would want to track history, if applicable
+            };
             break;
+            
         default:
             res.status(400).send('Unknown algorithm');
             return;
     }
 
-    res.json(result);
+    // Ensure all algorithms return a consistent format for the client
+    res.json({
+        processes: result.processes || [],
+        history: result.history || []
+    });
 });
 
 app.listen(port, () => {

@@ -7,6 +7,8 @@ class Process {
       this.remainingBurstTime = burstTime;
       this.startTime = null;
       this.completionTime = null;
+      this.waitingTime = 0;
+      this.turnaroundTime = 0;
   }
 
 toString() {

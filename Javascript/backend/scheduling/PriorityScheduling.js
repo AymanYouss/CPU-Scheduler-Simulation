@@ -20,6 +20,7 @@ function priorityScheduling(processes) {
             continue;
         }
 
+        // Lower number indicate higher priority!
         readyQueue.sort((a, b) => a.priority - b.priority);
         let currentProcess = readyQueue.shift();
 
