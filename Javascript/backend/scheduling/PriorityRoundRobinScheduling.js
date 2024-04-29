@@ -87,22 +87,22 @@ class PriorityRoundRobinScheduler {
     }
 }
 
-// Test the scheduler
-function testPriorityRoundRobin() {
-    const processes = generateRandomProcesses(3, [0, 10], [10, 20], [1, 5]);
-    const scheduler = new PriorityRoundRobinScheduler(processes);
-    const completedProcesses = scheduler.scheduleProcesses(processes);
-    for (const process of processes) {
-        console.log(`Process ${process.pid} (priority ${process.priority}), arrival time: ${process.arrivalTime}, and burstTime: ${process.burstTime}.`)
-    }
-    console.log();
-    completedProcesses.forEach(proc => {
-        console.log(`Process ${proc.pid} (Priority ${proc.priority}) completed at ${proc.completionTime}, Waiting Time: ${proc.waitingTime}, Turnaround Time: ${proc.turnaroundTime}`);
-    });
-    console.log(`Average turnaround time: ${scheduler.totalTurnaroundTime / processes.length}, Average Waiting Time: ${scheduler.totalWaitingTime / processes.length}`);
-}
+// // Test the scheduler
+// function testPriorityRoundRobin() {
+//     const processes = generateRandomProcesses(3, [0, 10], [10, 20], [1, 5]);
+//     const scheduler = new PriorityRoundRobinScheduler(processes);
+//     const completedProcesses = scheduler.scheduleProcesses(processes);
+//     for (const process of processes) {
+//         console.log(`Process ${process.pid} (priority ${process.priority}), arrival time: ${process.arrivalTime}, and burstTime: ${process.burstTime}.`)
+//     }
+//     console.log();
+//     completedProcesses.forEach(proc => {
+//         console.log(`Process ${proc.pid} (Priority ${proc.priority}) completed at ${proc.completionTime}, Waiting Time: ${proc.waitingTime}, Turnaround Time: ${proc.turnaroundTime}`);
+//     });
+//     console.log(`Average turnaround time: ${scheduler.totalTurnaroundTime / processes.length}, Average Waiting Time: ${scheduler.totalWaitingTime / processes.length}`);
+// }
 
-testPriorityRoundRobin();
+// testPriorityRoundRobin();
 
 // Temporary testing in the terminal
 

@@ -37,11 +37,9 @@ app.post('/simulate', (req, res) => {
             break;
         case 'Priority Round Robin':
             const scheduler = new PriorityRoundRobinScheduler(processes);
-            result = {
-                processes: scheduler.scheduleProcesses(processes),
-                history: []  // Assuming you would want to track history, if applicable
-            };
+            result = scheduler.scheduleProcesses(processes);
             break;
+        // handle other cases
             
         default:
             res.status(400).send('Unknown algorithm');
