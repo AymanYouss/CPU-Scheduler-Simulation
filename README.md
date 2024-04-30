@@ -122,7 +122,7 @@ Testing each scheduling algorithm and analyzing performance metrics is a critica
 2. Select the desired scheduling algorithm from the dropdown menu, such as "First Come First Served" (FCFS).
 3. Click on the 'Run' button to start the simulation.
 
-![Input Interface](Javascript/frontend/images/input_interface.png)
+![Input Interface](./frontend/images/input_interface.png)
 
 ### Results and Metrics:
 After running the simulation, the following results are displayed:
@@ -132,15 +132,15 @@ After running the simulation, the following results are displayed:
 - **Gantt Chart**: Provides a visual representation of the process execution order.
 
 Scrolling down the page reveals additional visual insights:
-![Output Table](Javascript/frontend/images/output_table.png)
+![Output Table](./frontend/images/output_table.png)
 
 - **Average Waiting and Turnaround Time Graphs**: Plots that display the waiting time and turnaround time for the processes, which helps in understanding the efficiency of the algorithm.
 
-![Average Times Plotted](Javascript/frontend/images/avg_waiting_ta_times.png)
+![Average Times Plotted](./frontend/images/avg_waiting_ta_times.png)
 
 - **Detailed Metrics Charts**: Further down, you will find bar charts detailing the Waiting Time, Turnaround Time, and Completion Time for each process.
 
-![Detailed Metrics Charts](Javascript/frontend/images/detailed_charts.png)
+![Detailed Metrics Charts](./frontend/images/detailed_charts.png)
 
 These visual tools not only aid in verifying the correctness of the algorithm's implementation but also provide an immediate comparative analysis of the various performance metrics.
 
