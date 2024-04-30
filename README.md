@@ -19,7 +19,7 @@
     - [Testing from the GUI](#testing-from-the-gui)
     - [Results and Metrics](#results-and-metrics)
     - [Testing in the Console](#testing-in-the-console)
-      - [Interactive Testing (test.js)](#interactive-testing-testjs)
+      - [Interactive Testing (testRandomProcesses.js)](#interactive-testing-testrandomprocessesjs)
       - [Automated Testing (test2.js)](#automated-testing-test2js)
 8. [Customization Options](#customization-options)
 9. [Conclusion](#conclusion)
@@ -148,17 +148,17 @@ These visual tools not only aid in verifying the correctness of the algorithm's 
 
 For console-based testing, the simulation provides two distinct testing options via scripts located in the `backend` directory. These options allow you to test scheduling algorithms either interactively or automatically using predefined data.
 
-#### Interactive Testing (test.js)
+#### Interactive Testing (testRandomProcesses.js)
 
-1. **Running the Test**: Navigate to the `backend` directory and execute `node test.js` in the terminal.
+1. **Running the Test**: Navigate to the `testing` directory and execute `node testRandomProcesses.js` in the terminal.
 2. **Algorithm Selection**: You will be prompted to select a scheduling algorithm from the list, such as "Shortest Job Next" or "Priority Scheduling".
 3. **Process Definition**: Define the processes by entering their attributes (Process ID, Arrival Time, Burst Time, and Priority, if applicable) as prompted in the console.
 4. **Results Display**: After running the simulation, the console will display detailed information for each process, including Process ID, Start Time, Completion Time, Turnaround Time, and Waiting Time. Additionally, average turnaround and waiting times for the entire batch of processes will be presented.
 
 #### Automated Testing (test2.js)
 
-1. **Running the Test**: Execute `node test2.js` from within the `backend` directory.
-2. **Data Utilization**: This script automatically retrieves process data from the `test.json` file located in the same directory. 
+1. **Running the Test**: Execute `node test2.js` from within the `testing` directory which is inside the `backend` directory.
+2. **Data Utilization**: This script automatically retrieves process data from the `testcases.json` file located in the same directory. 
 3. **Algorithm Execution**: `test2.js` will run all available scheduling algorithms on the predefined set of processes.
 4. **Results Compilation**: After processing, the script will output the results for each algorithm, displaying detailed metrics such as Turnaround Time, Waiting Time, and Completion Time for each process, alongside overall performance comparisons.
 
