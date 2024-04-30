@@ -1,19 +1,18 @@
 const fs = require('fs');
-const { Process } = require('./Process');
-const roundRobinScheduling = require('./RoundRobinScheduling');
-const priorityScheduling = require('./PriorityScheduling');
-const sjfScheduling = require('./SJFScheduling');
-const fcfsScheduling = require('./FCFSScheduling');
-console.log("ssdfdsfds")
+const { Process } = require('../scheduling/Process');
+const roundRobinScheduling = require('../scheduling/RoundRobinScheduling');
+const priorityScheduling = require('../scheduling/PriorityScheduling');
+const sjfScheduling = require('../scheduling/SJFScheduling');
+const fcfsScheduling = require('../scheduling/FCFSScheduling');
+const { PriorityRoundRobinScheduler } = require('../scheduling/PriorityRoundRobinScheduling');
 
 function loadTestCases() {
-    const rawData = fs.readFileSync('testcases.json');
+    const rawData = fs.readFileSync('./testcases.json');
     return JSON.parse(rawData);
 }
 
 function checkResults(actual, expected) {
     console.log("Checking results...");
-    console.log(actual);
     const actualResults = actual.processes.map(p => ({
         pid: p.pid,
         completionTime: p.completionTime,
@@ -37,21 +36,22 @@ function checkResults(actual, expected) {
     }
 }
 
-function testRoundRobin() {
-    const testCases = loadTestCases().roundRobin;
-    const processes = testCases.input.map(p => new Process(p.pid, p.arrivalTime, p.burstTime));
-    const timeQuanta = testCases.timeQuanta;
-
-    console.log("Testing Round Robin Scheduling...");
-    const actual = roundRobinScheduling(processes, timeQuanta);
-
-    checkResults(actual, testCases.expected.results);
-}
 
 function testSchedulingAlgorithm(algorithm, algorithmFunction) {
     const testCases = loadTestCases()[algorithm];
     const processes = testCases.input.map(p => new Process(p.pid, p.arrivalTime, p.burstTime, p.priority, p.waitingTime));
-    const results = algorithmFunction(processes);
+    let results;
+    if (algorithm === "priorityRoundRobin"){
+        const scheduler = new PriorityRoundRobinScheduler(processes, testCases.timeQuanta);
+        results = scheduler.scheduleProcesses(processes);
+    } 
+    else if (algorithm === "roundRobin"){
+        results = algorithmFunction(processes,testCases.timeQuanta);
+        
+    } else{
+        results = algorithmFunction(processes);
+    }
+   
     checkResults(results, testCases.expected.results);
 }
 
@@ -67,8 +67,9 @@ function main() {
 
     console.log("Testing First-Come, First-Serve Scheduling...");
     testSchedulingAlgorithm('fcfs', fcfsScheduling);
+
+    console.log("Testing Priority Round Robin Scheduling...");
+    testSchedulingAlgorithm('priorityRoundRobin', null);
 }
 
-// testRoundRobin();
-console.log("-----------------------------");
 main();

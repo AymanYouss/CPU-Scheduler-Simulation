@@ -45,9 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayResults(data) {
-
-        console.log("ana dkhelt hna");
-        // Clear previous results
         resultsTable.innerHTML = '';
         ganttChart.innerHTML = '';
     
@@ -82,25 +79,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         resultsTable.appendChild(table);
     
-        // Create and append the Gantt chart
-        // displaygantayman(data);
 
-         // Create charts
-    displayChart('waiting-time-chart2', 'waitingTime', data, 'Waiting Time');
-    displayChart('turnaround-time-chart2', 'turnaroundTime', data, 'Turnaround Time');
-    displayChart('completion-time-chart2', 'completionTime', data, 'Completion Time');
+        displayChart('waiting-time-chart2', 'waitingTime', data, 'Waiting Time');
+        displayChart('turnaround-time-chart2', 'turnaroundTime', data, 'Turnaround Time');
+        displayChart('completion-time-chart2', 'completionTime', data, 'Completion Time');
 
-    // Display averages
-    displayAverages(data);
+        displayAverages(data);
 
         
     }
 
-    function displaygantayman(data){
-        console.log("Data jayya mn display gantayman");
-        console.log(data);
+    function displayGanttChart(data){
         let currentTime = 0;
-    data.forEach((proc, index) => {
+        data.forEach((proc, index) => {
         const bar = document.createElement('div');
         bar.className = 'gantt-bar';
         bar.style.width = `${proc.burstTime * 20}px`; // Scaling factor for visualization
@@ -129,58 +120,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     
-        // Optionally, set the total width based on time or make it scrollable
         ganttChart.style.overflowX = 'auto';
     }
-    // function plotData(history) {
-    //     const waitingCtx = document.getElementById('waiting-time-chart').getContext('2d');
-    //     const turnaroundCtx = document.getElementById('turnaround-time-chart').getContext('2d');
     
-    //     // if (window.waitingChart) window.waitingChart.destroy();
-    //     // if (window.turnaroundChart) window.turnaroundChart.destroy();
-    
-    //     window.waitingChart = new Chart(waitingCtx, {
-    //         type: 'line',
-    //         data: {
-    //             labels: history.map(x => `Time ${x.time}`),
-    //             datasets: [{
-    //                 label: 'Average Waiting Time',
-    //                 data: history.map(x => x.avgWaitingTime),
-    //                 borderColor: 'red',
-    //                 borderWidth: 2,
-    //                 fill: false
-    //             }]
-    //         },
-    //         options: {
-    //             scales: {
-    //                 y: {
-    //                     beginAtZero: true
-    //                 }
-    //             }
-    //         }
-    //     });
-    
-    //     window.turnaroundChart = new Chart(turnaroundCtx, {
-    //         type: 'line',
-    //         data: {
-    //             labels: history.map(x => `Time ${x.time}`),
-    //             datasets: [{
-    //                 label: 'Average Turnaround Time',
-    //                 data: history.map(x => x.avgTurnaroundTime),
-    //                 borderColor: 'blue',
-    //                 borderWidth: 2,
-    //                 fill: false
-    //             }]
-    //         },
-    //         options: {
-    //             scales: {
-    //                 y: {
-    //                     beginAtZero: true
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
     function plotData(history) {
         const waitingCtx = document.getElementById('waiting-time-chart').getContext('2d');
         const turnaroundCtx = document.getElementById('turnaround-time-chart').getContext('2d');
@@ -226,30 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
 
-    // function displayChart(canvasId, label, data, chartLabel) {
-    //     const ctx = document.getElementById(canvasId).getContext('2d');
-    //     new Chart(ctx, {
-    //         type: 'bar',
-    //         data: {
-    //             labels: data.map(item => item.pid),
-    //             datasets: [{
-    //                 label: chartLabel,
-    //                 data: data.map(item => item[label]),
-    //                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
-    //                 borderColor: 'rgba(54, 162, 235, 1)',
-    //                 borderWidth: 1
-    //             }]
-    //         },
-    //         options: {
-    //             indexAxis: 'y',
-    //             scales: {
-    //                 x: {
-    //                     beginAtZero: true
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
+    
 
     window.chartInstances = window.chartInstances || {};
 window.chartInstances[0] = null;
@@ -341,12 +260,11 @@ function displayChart(canvasId, label, data, chartLabel) {
         .then(data => {
             if (selectedAlgorithm === "Priority Round Robin"){
                 displayResults(data.processes);
-                displaygantayman(data.ganttLog);
+                displayGanttChart(data.ganttLog);
                 plotData(data.history);
-                // renderGanttChart(data.ganttLog);
             } else {
                 displayResults(data.processes);
-                displaygantayman(data.ganttLog);
+                displayGanttChart(data.ganttLog);
                 plotData(data.history);
             }
         })
@@ -354,50 +272,7 @@ function displayChart(canvasId, label, data, chartLabel) {
             console.error('Error:', error);
         });
     }
-    function renderGanttChart(ganttLog) {
-        const ganttChart = document.getElementById('gantt-chart');
-        let lastEndTime = 0;
     
-        ganttLog.forEach((entry, index) => {
-            const bar = document.createElement('div');
-            bar.className = 'gantt-bar';
-            bar.style.width = `${(entry.endTime - entry.startTime) * 20}px`; // Scale for visualization
-            bar.style.backgroundColor = getRandomColor();
-            bar.textContent = entry.pid;
-    
-            const offset = entry.startTime - lastEndTime;
-            bar.style.marginLeft = `${offset * 20}px`;
-        // Create a progress bar inside the Gantt bar
-        const progressBar = document.createElement('div');
-        progressBar.className = 'progress-bar';
-        progressBar.style.width = '0%'; // Initialize to 0% width
-        bar.appendChild(progressBar);
-
-        // Update current time
-        lastEndTime = entry.endTime;
-
-        ganttChart.appendChild(bar);
-
-        // Animate the progress bar
-        setTimeout(() => {
-            progressBar.style.width = '100%'; // Fill the bar to indicate completion
-        }, index * 500); // Delay each animation for sequential effect
-            // ganttChart.appendChild(bar);
-            
-
-            // const bar = document.createElement('div');
-    //     bar.className = 'gantt-bar';
-    //     bar.style.width = `${proc.burstTime * 20}px`; // Scaling factor for visualization
-    //     bar.style.backgroundColor = getRandomColor();
-    //     bar.textContent = proc.pid;
-
-    //     // Calculate the starting point for the bar
-    //     const offset = proc.startTime - currentTime;
-    //     bar.style.marginLeft = `${offset * 20}px`; // Reflecting any idle time
-
-    
-        });
-    }
 
     function resetSimulation() {
         processesContainer.innerHTML = ''; // Clear existing processes
@@ -411,7 +286,6 @@ function displayChart(canvasId, label, data, chartLabel) {
         window.turnaroundChart = null; // Clear the reference
     }
 
-    // Optionally, reset any displayed averages or other indicators
     document.getElementById('av1').textContent = '';
     document.getElementById('av2').textContent = '';
     document.getElementById('av3').textContent = '';
@@ -440,103 +314,7 @@ function displayChart(canvasId, label, data, chartLabel) {
     // Initialize with one process row
     createProcessInputRow('P1');
 
-    // document.getElementById('load-file').addEventListener('click', function() {
-    //     const fileInput = document.getElementById('file-input');
-    //     const file = fileInput.files[0];
-    //     if (file) {
-    //         const reader = new FileReader();
-    //         reader.onload = function(e) {
-    //             const contents = e.target.result;
-    //             const processes = parseFile(contents);
-    //             // Assuming you have a function to send this data to the server or directly use it
-    //             console.log(processes);  // For debugging
-    //             console.log("Sfrdoga");
-    //             runSimulation(processes);  // Implement this function as needed
-    //         };
-    //         reader.readAsText(file);
-    //     } else {
-    //         alert('Please select a file.');
-    //     }
-    // });
     
-    // function parseFile(contents) {
-    //     const lines = contents.trim().split('\n');
-    //     const header = lines.shift().split(',');  // Assuming first line is header
-    //     return lines.map(line => {
-    //         const data = line.split(',');
-    //         let process = {};
-    //         header.forEach((key, index) => {
-    //             process[key.trim()] = data[index].trim();
-    //         });
-            
-    //         return process;
-    //     });
-    // }
-//--------------------------------------------------------------------------------------------------
-  
-    //     document.getElementById('load-file').addEventListener('click', function() {
-    //         const fileInput = document.getElementById('file-input');
-    //         const file = fileInput.files[0];
-    //         console.log(file);
-    //         if (file) {
-    //             console.log("Logaqsdfdsfds");
-    //             const reader = new FileReader();
-    //             reader.onload = function(e) {
-    //                 const contents = e.target.result;
-    //                 const processes = parseFile(contents);
-    //                 console.log(processes);
-    //                 fillProcessForm(processes);
-    //             };
-    //             reader.readAsText(file);
-    //         } else {
-    //             alert('Please select a file.');
-    //             console.log("Makaynsh file");
-    //         }
-    //     });
-    
-    //     document.getElementById('algorithm-select').addEventListener('change', function() {
-    //         const timeQuantumContainer = document.getElementById('time-quantum-container');
-    //         if (this.value === 'Round Robin') {
-    //             timeQuantumContainer.style.display = 'block';
-    //         } else {
-    //             timeQuantumContainer.style.display = 'none';
-    //         }
-    //     });
-    
-    
-    // function parseFile(contents) {
-    //     const lines = contents.trim().split('\n');
-    //     lines.shift(); // Skip the header line
-    //     return lines.map(line => {
-    //         const parts = line.split(',');
-    //         return {
-    //             pid: parts[0].trim(),
-    //             arrivalTime: parts[1].trim(),
-    //             burstTime: parts[2].trim(),
-    //             priority: parts[3] ? parts[3].trim() : undefined
-    //         };
-    //     });
-    // }
-    
-    // function fillProcessForm(processes) {
-    //     const container = document.getElementById('processes-container');
-    //     container.innerHTML = ''; // Clear existing entries
-    //     processes.forEach((process, index) => {
-    //         addProcessToForm(process, index + 1);
-    //     });
-    // }
-    
-    // function addProcessToForm(process, index) {
-    //     const row = document.createElement('div');
-    //     row.className = 'process-row';
-    //     row.innerHTML = `
-    //         <input type="text" placeholder="Process ID" value="${process.pid}" readonly>
-    //         <input type="number" placeholder="Arrival Time" value="${process.arrivalTime}" min="0" step="1" required>
-    //         <input type="number" placeholder="Burst Time" value="${process.burstTime}" min="1" step="1" required>
-    //         ${process.priority ? `<input type="number" placeholder="Priority" value="${process.priority}" min="1" step="1" required>` : ''}
-    //     `;
-    //     processesContainer.appendChild(row);
-    // }
 
     document.getElementById('load-file').addEventListener('click', function() {
         const fileInput = document.getElementById('file-input');
@@ -561,8 +339,8 @@ function displayChart(canvasId, label, data, chartLabel) {
             'FCFS': 'FCFS',
             'SJF': 'SJF',
             'Priority': 'Priority',
-            'RR': 'Round Robin',  // Assuming 'RR' stands for 'Round Robin'
-            'PR': 'Priority Round Robin'  // Example if you have a Priority Round Robin
+            'RR': 'Round Robin',  
+            'PR': 'Priority Round Robin'  
         };
     
         const algorithmSelect = document.getElementById('algorithm-select');

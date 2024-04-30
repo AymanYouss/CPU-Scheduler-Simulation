@@ -21,7 +21,6 @@ function fcfsScheduling(processes) {
         totalWaitingTime += process.waitingTime;
         totalTurnaroundTime += process.turnaroundTime;
 
-        // Record the cumulative average at each step
         history.push({
             time: currentTime,
             avgWaitingTime: totalWaitingTime / (index + 1),
@@ -36,6 +35,3 @@ function fcfsScheduling(processes) {
 
 module.exports = fcfsScheduling;
 
-// Example usage
-// const processes = generateRandomProcesses(5, [1, 5], [5, 15]);
-// console.log(fcfsScheduling(processes));

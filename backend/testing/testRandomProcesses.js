@@ -1,12 +1,12 @@
 const readline = require('readline');
-const { Process, generateRandomProcesses } = require('./Process');
+const { Process, generateRandomProcesses } = require('../scheduling/Process');
 
 console.log("Importing scheduling algorithms");
-const fcfsScheduling = require('./FCFSScheduling');
-const sjfScheduling = require('./SJFScheduling');
-const priorityScheduling = require('./PriorityScheduling');
-const roundRobinScheduling = require('./RoundRobinScheduling');
-const priorityRoundRobinScheduling = require('./PriorityRoundRobinScheduling');
+const fcfsScheduling = require('../scheduling/FCFSScheduling');
+const sjfScheduling = require('../scheduling/SJFScheduling');
+const priorityScheduling = require('../scheduling/PriorityScheduling');
+const roundRobinScheduling = require('../scheduling/RoundRobinScheduling');
+const priorityRoundRobinScheduling = require('../scheduling/PriorityRoundRobinScheduling');
 
 console.log("FCFS Imported:", fcfsScheduling);
 console.log("SJF Imported:", sjfScheduling);
