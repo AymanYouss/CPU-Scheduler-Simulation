@@ -38,8 +38,12 @@ app.post('/simulate', (req, res) => {
             console.log(result);
             break;
         case 'Priority Round Robin':
-            const scheduler = new PriorityRoundRobinScheduler(processes);
+            const scheduler = new PriorityRoundRobinScheduler(processes, timeQuantum);
+            console.log(processes);
+            console.log(timeQuantum);
+            console.log("SCHEDULER :");
             result = scheduler.scheduleProcesses(processes);
+            console.log(result);
             break;
         // handle other cases
             

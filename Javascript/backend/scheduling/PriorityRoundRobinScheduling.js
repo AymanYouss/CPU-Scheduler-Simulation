@@ -1,30 +1,30 @@
 const { Process, generateRandomProcesses } = require('./Process');
 
 class PriorityRoundRobinScheduler {
-    constructor(processList) {
+    constructor(processList, timeQuantum) {
         this.queues = {}; // Map of priority levels to their queues
         this.currentTime = 0; // Global clock
         this.totalTurnaroundTime = 0;
         this.totalWaitingTime = 0;
-        this.quanta = this.calculateQuanta(processList);
+        this.quanta = timeQuantum;
         this.minPriority = Math.min(...processList.map(p => p.priority)); // Calculate minimum priority
         this.maxPriority = Math.max(...processList.map(p => p.priority)); // Calculate maximum priority
         this.history = [];  // Initialize history tracking
     }
 
-    calculateQuanta(processList) {
-        const prioritySet = new Set(processList.map(p => p.priority));
-        const maxPriority = Math.max(...prioritySet);
-        const minPriority = Math.min(...prioritySet);
+    // calculateQuanta(processList) {
+    //     const prioritySet = new Set(processList.map(p => p.priority));
+    //     const maxPriority = Math.max(...prioritySet);
+    //     const minPriority = Math.min(...prioritySet);
 
-        const quanta = {};
-        prioritySet.forEach(priority => {
-            // Invert the priority for the quantum: Higher priority gets the quantum of the lower and vice versa
-            quanta[priority] = maxPriority - priority + minPriority;
-        });
+    //     const quanta = {};
+    //     prioritySet.forEach(priority => {
+    //         // Invert the priority for the quantum: Higher priority gets the quantum of the lower and vice versa
+    //         quanta[priority] = maxPriority - priority + minPriority;
+    //     });
 
-        return quanta;
-    }
+    //     return quanta;
+    // }
 
     enqueueProcess(process) {
         if (!this.queues[process.priority]) {
@@ -53,9 +53,9 @@ class PriorityRoundRobinScheduler {
             for (let priority = this.minPriority; priority <= this.maxPriority; priority++) {
                 if (this.queues[priority] && this.queues[priority].length > 0) {
                     let process = this.queues[priority].shift();
-                    let quantum = this.quanta[priority];
+                    // console.log(`Process: ${process.pid}`);
                     let startTime = this.currentTime; // Capture start time
-                    let timeSlice = Math.min(process.remainingBurstTime, quantum);
+                    let timeSlice = Math.min(process.remainingBurstTime, this.quanta);
                     process.remainingBurstTime -= timeSlice;
                     this.currentTime += timeSlice;
 
@@ -88,7 +88,7 @@ class PriorityRoundRobinScheduler {
             }
         }
 
-        return { processes: activeProcesses, history: this.history,ganttLog: ganttLog }; // Return both processed data and history
+        return { processes: activeProcesses, history: this.history, ganttLog: ganttLog }; // Return both processed data and history
     }
 
     allQueuesEmpty() {
@@ -96,22 +96,22 @@ class PriorityRoundRobinScheduler {
     }
 }
 
-// // Test the scheduler
-// function testPriorityRoundRobin() {
-//     const processes = generateRandomProcesses(3, [0, 10], [10, 20], [1, 5]);
-//     const scheduler = new PriorityRoundRobinScheduler(processes);
-//     const completedProcesses = scheduler.scheduleProcesses(processes);
-//     for (const process of processes) {
-//         console.log(`Process ${process.pid} (priority ${process.priority}), arrival time: ${process.arrivalTime}, and burstTime: ${process.burstTime}.`)
-//     }
-//     console.log();
-//     completedProcesses.forEach(proc => {
-//         console.log(`Process ${proc.pid} (Priority ${proc.priority}) completed at ${proc.completionTime}, Waiting Time: ${proc.waitingTime}, Turnaround Time: ${proc.turnaroundTime}`);
-//     });
-//     console.log(`Average turnaround time: ${scheduler.totalTurnaroundTime / processes.length}, Average Waiting Time: ${scheduler.totalWaitingTime / processes.length}`);
-// }
+// Test the scheduler
+function testPriorityRoundRobin() {
+    const processes = generateRandomProcesses(3, [0, 10], [10, 20], [1, 5]);
+    const scheduler = new PriorityRoundRobinScheduler(processes, 2);
+    processes.forEach(proc => {
+        console.log(`Process ${proc.pid} (Priority ${proc.priority}) arrived at ${proc.arrivalTime} and requires ${proc.burstTime} units`);
+    });
+    const completedProcesses = scheduler.scheduleProcesses(processes).processes;
+    console.log();
+    completedProcesses.forEach(proc => {
+        console.log(`Process ${proc.pid} (Priority ${proc.priority}) completed at ${proc.completionTime}, Waiting Time: ${proc.waitingTime}, Turnaround Time: ${proc.turnaroundTime}`);
+    });
+    console.log(`Average turnaround time: ${scheduler.totalTurnaroundTime / processes.length}, Average Waiting Time: ${scheduler.totalWaitingTime / processes.length}`);
+}
 
-// testPriorityRoundRobin();
+testPriorityRoundRobin();
 
 // Temporary testing in the terminal
 
