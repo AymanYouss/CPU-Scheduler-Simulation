@@ -44,7 +44,7 @@ function priorityScheduling(processes) {
     }
 
     // Return both the processes and the history for plotting
-    return { processes: completedProcesses, history };
+    return { processes: completedProcesses, history:history ,ganttLog:history};
 }
 
 // Example usage

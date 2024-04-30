@@ -4,6 +4,7 @@ const roundRobinScheduling = require('./RoundRobinScheduling');
 const priorityScheduling = require('./PriorityScheduling');
 const sjfScheduling = require('./SJFScheduling');
 const fcfsScheduling = require('./FCFSScheduling');
+console.log("ssdfdsfds")
 
 function loadTestCases() {
     const rawData = fs.readFileSync('testcases.json');
@@ -12,7 +13,8 @@ function loadTestCases() {
 
 function checkResults(actual, expected) {
     console.log("Checking results...");
-    const actualResults = actual.map(p => ({
+    console.log(actual);
+    const actualResults = actual.processes.map(p => ({
         pid: p.pid,
         completionTime: p.completionTime,
         turnaroundTime: p.completionTime - p.arrivalTime,

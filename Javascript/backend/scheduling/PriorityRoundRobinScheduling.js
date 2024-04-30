@@ -37,6 +37,7 @@ class PriorityRoundRobinScheduler {
         processList.sort((a, b) => a.arrivalTime - b.arrivalTime);
         let nextProcessIndex = 0;
         let activeProcesses = [];
+        let ganttLog = []; // Initialize the Gantt log
 
         while (nextProcessIndex < processList.length || !this.allQueuesEmpty()) {
             while (nextProcessIndex < processList.length && processList[nextProcessIndex].arrivalTime <= this.currentTime) {
@@ -53,9 +54,17 @@ class PriorityRoundRobinScheduler {
                 if (this.queues[priority] && this.queues[priority].length > 0) {
                     let process = this.queues[priority].shift();
                     let quantum = this.quanta[priority];
+                    let startTime = this.currentTime; // Capture start time
                     let timeSlice = Math.min(process.remainingBurstTime, quantum);
                     process.remainingBurstTime -= timeSlice;
                     this.currentTime += timeSlice;
+
+                    ganttLog.push({
+                        pid: process.pid,
+                        startTime: startTime,
+                        endTime: this.currentTime,
+                        burstTime: timeSlice
+                    });
 
                     if (process.remainingBurstTime > 0) {
                         this.enqueueProcess(process);
@@ -79,7 +88,7 @@ class PriorityRoundRobinScheduler {
             }
         }
 
-        return { processes: activeProcesses, history: this.history }; // Return both processed data and history
+        return { processes: activeProcesses, history: this.history,ganttLog: ganttLog }; // Return both processed data and history
     }
 
     allQueuesEmpty() {

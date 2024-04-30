@@ -29,7 +29,7 @@ function fcfsScheduling(processes) {
         });
     });
 
-    return { processes, history };
+    return {processes: processes, history:history ,ganttLog: processes};
 }
 
 

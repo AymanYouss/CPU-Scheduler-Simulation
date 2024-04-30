@@ -34,6 +34,8 @@ app.post('/simulate', (req, res) => {
             break;
         case 'Round Robin':
             result = roundRobinScheduling(processes, timeQuantum);
+            console.log("RESULT :");
+            console.log(result);
             break;
         case 'Priority Round Robin':
             const scheduler = new PriorityRoundRobinScheduler(processes);
@@ -49,7 +51,8 @@ app.post('/simulate', (req, res) => {
     // Ensure all algorithms return a consistent format for the client
     res.json({
         processes: result.processes || [],
-        history: result.history || []
+        history: result.history || [],
+        ganttLog : result.ganttLog || []
     });
 });
 

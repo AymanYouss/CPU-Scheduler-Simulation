@@ -48,42 +48,107 @@ const { Process } = require('./Process');
 // }
 
 
+// function roundRobinScheduling(processList, timeQuanta) {
+//     let t = 0; // Current time
+//     let queue = []; // Queue of processes ready to be executed
+//     let completed = []; // List of completed processes
+//     let history = []; // History log for average waiting and turnaround times
+//     let totalWaitingTime = 0; // Total waiting time accumulator
+//     let totalTurnaroundTime = 0; // Total turnaround time accumulator
+
+//     processList.sort((a, b) => a.arrivalTime - b.arrivalTime);
+
+//     while (processList.length > 0 || queue.length > 0) {
+//         if (queue.length === 0) {
+//             // If queue is empty, find the next process by time and set current time to its arrival
+//             let nextProcess = processList.shift();
+//             t = nextProcess.arrivalTime;
+//             queue.push(nextProcess);
+//         }
+
+//         let process = queue.shift();
+        
+//         // Determine end time of the current time slice
+//         let endTime = t + Math.min(process.remainingBurstTime, timeQuanta);
+        
+//         // Check for new arrivals before this time slice ends and add them to the queue
+//         while (processList.length > 0 && processList[0].arrivalTime <= endTime) {
+//             queue.push(processList.shift());
+//         }
+
+//         process.remainingBurstTime -= endTime - t;
+//         t = endTime; // Advance time to the end of this time slice
+
+//         if (process.remainingBurstTime > 0) {
+//             // If process is not completed, re-enqueue it at the back of the queue
+//             queue.push(process);
+//         } else {
+//             // If process completes within this time slice
+//             process.completionTime = t;
+//             process.turnaroundTime = process.completionTime - process.arrivalTime;
+//             process.waitingTime = process.completionTime - process.burstTime - process.arrivalTime;
+//             completed.push(process);
+
+//             totalWaitingTime += process.waitingTime;
+//             totalTurnaroundTime += process.turnaroundTime;
+
+//             // Record the history of average waiting and turnaround times at each completion
+//             history.push({
+//                 time: t,
+//                 avgWaitingTime: totalWaitingTime / completed.length,
+//                 avgTurnaroundTime: totalTurnaroundTime / completed.length
+//             });
+//         }
+//     }
+
+//     // Return both the completed processes and the history for plotting
+//     return { processes: completed, history };
+// }
+
 function roundRobinScheduling(processList, timeQuanta) {
-    let t = 0; // Current time
-    let queue = []; // Queue of processes ready to be executed
-    let completed = []; // List of completed processes
+    let t = 0;
+    let queue = [];
+    let completed = [];
+    let ganttLog = [];  // Log to keep track of when each process runs
     let history = []; // History log for average waiting and turnaround times
-    let totalWaitingTime = 0; // Total waiting time accumulator
-    let totalTurnaroundTime = 0; // Total turnaround time accumulator
+    let totalWaitingTime = 0;
+    let totalTurnaroundTime = 0;
 
     processList.sort((a, b) => a.arrivalTime - b.arrivalTime);
 
     while (processList.length > 0 || queue.length > 0) {
         if (queue.length === 0) {
-            // If queue is empty, find the next process by time and set current time to its arrival
             let nextProcess = processList.shift();
             t = nextProcess.arrivalTime;
             queue.push(nextProcess);
         }
 
         let process = queue.shift();
-        
-        // Determine end time of the current time slice
+        let startTime = t;
         let endTime = t + Math.min(process.remainingBurstTime, timeQuanta);
-        
-        // Check for new arrivals before this time slice ends and add them to the queue
+
+        if (process.startTime === undefined) {
+            process.startTime = startTime;  // Set the start time only the first time the process runs
+        }
+
+        // Record the process running in the Gantt log
+        ganttLog.push({
+            pid: process.pid,
+            startTime: startTime,
+            endTime: endTime,
+            burstTime: endTime -startTime 
+        });
+
         while (processList.length > 0 && processList[0].arrivalTime <= endTime) {
             queue.push(processList.shift());
         }
 
         process.remainingBurstTime -= endTime - t;
-        t = endTime; // Advance time to the end of this time slice
+        t = endTime;
 
         if (process.remainingBurstTime > 0) {
-            // If process is not completed, re-enqueue it at the back of the queue
             queue.push(process);
         } else {
-            // If process completes within this time slice
             process.completionTime = t;
             process.turnaroundTime = process.completionTime - process.arrivalTime;
             process.waitingTime = process.completionTime - process.burstTime - process.arrivalTime;
@@ -92,7 +157,6 @@ function roundRobinScheduling(processList, timeQuanta) {
             totalWaitingTime += process.waitingTime;
             totalTurnaroundTime += process.turnaroundTime;
 
-            // Record the history of average waiting and turnaround times at each completion
             history.push({
                 time: t,
                 avgWaitingTime: totalWaitingTime / completed.length,
@@ -100,10 +164,13 @@ function roundRobinScheduling(processList, timeQuanta) {
             });
         }
     }
+    
 
-    // Return both the completed processes and the history for plotting
-    return { processes: completed, history };
+    return { processes: completed,history:history, ganttLog: ganttLog };
 }
+
+module.exports = roundRobinScheduling;
+
 
 
 

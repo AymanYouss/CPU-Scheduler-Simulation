@@ -82,7 +82,23 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsTable.appendChild(table);
     
         // Create and append the Gantt chart
-    let currentTime = 0;
+        // displaygantayman(data);
+
+         // Create charts
+    displayChart('waiting-time-chart2', 'waitingTime', data, 'Waiting Time');
+    displayChart('turnaround-time-chart2', 'turnaroundTime', data, 'Turnaround Time');
+    displayChart('completion-time-chart2', 'completionTime', data, 'Completion Time');
+
+    // Display averages
+    displayAverages(data);
+
+        
+    }
+
+    function displaygantayman(data){
+        console.log("Data jayya mn display gantayman");
+        console.log(data);
+        let currentTime = 0;
     data.forEach((proc, index) => {
         const bar = document.createElement('div');
         bar.className = 'gantt-bar';
@@ -114,16 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Optionally, set the total width based on time or make it scrollable
         ganttChart.style.overflowX = 'auto';
-
-         // Create charts
-    displayChart('waiting-time-chart2', 'waitingTime', data, 'Waiting Time');
-    displayChart('turnaround-time-chart2', 'turnaroundTime', data, 'Turnaround Time');
-    displayChart('completion-time-chart2', 'completionTime', data, 'Completion Time');
-
-    // Display averages
-    displayAverages(data);
-
-        
     }
     // function plotData(history) {
     //     const waitingCtx = document.getElementById('waiting-time-chart').getContext('2d');
@@ -332,11 +338,60 @@ function displayChart(canvasId, label, data, chartLabel) {
         })
         .then(response => response.json())
         .then(data => {
+            if (selectedAlgorithm === "Round Robin"){
+                
+                // renderGanttChart(data.ganttLog);
+            }
             displayResults(data.processes);
+            displaygantayman(data.ganttLog);
             plotData(data.history);
         })
         .catch(error => {
             console.error('Error:', error);
+        });
+    }
+    function renderGanttChart(ganttLog) {
+        const ganttChart = document.getElementById('gantt-chart');
+        let lastEndTime = 0;
+    
+        ganttLog.forEach((entry, index) => {
+            const bar = document.createElement('div');
+            bar.className = 'gantt-bar';
+            bar.style.width = `${(entry.endTime - entry.startTime) * 20}px`; // Scale for visualization
+            bar.style.backgroundColor = getRandomColor();
+            bar.textContent = entry.pid;
+    
+            const offset = entry.startTime - lastEndTime;
+            bar.style.marginLeft = `${offset * 20}px`;
+        // Create a progress bar inside the Gantt bar
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        progressBar.style.width = '0%'; // Initialize to 0% width
+        bar.appendChild(progressBar);
+
+        // Update current time
+        lastEndTime = entry.endTime;
+
+        ganttChart.appendChild(bar);
+
+        // Animate the progress bar
+        setTimeout(() => {
+            progressBar.style.width = '100%'; // Fill the bar to indicate completion
+        }, index * 500); // Delay each animation for sequential effect
+            // ganttChart.appendChild(bar);
+            
+
+            // const bar = document.createElement('div');
+    //     bar.className = 'gantt-bar';
+    //     bar.style.width = `${proc.burstTime * 20}px`; // Scaling factor for visualization
+    //     bar.style.backgroundColor = getRandomColor();
+    //     bar.textContent = proc.pid;
+
+    //     // Calculate the starting point for the bar
+    //     const offset = proc.startTime - currentTime;
+    //     bar.style.marginLeft = `${offset * 20}px`; // Reflecting any idle time
+
+    
         });
     }
 
