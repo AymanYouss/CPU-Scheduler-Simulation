@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const addProcessBtn = document.getElementById('add-process');
+    const removeProcessBtn = document.getElementById('remove-process');
     const runBtn = document.getElementById('run');
     const resetBtn = document.getElementById('reset');
     const algorithmSelect = document.getElementById('algorithm-select');
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <input type="number" placeholder="Burst Time" min="1" step="1" required>
         `;
         if (["Priority", "Priority Round Robin"].includes(algorithmSelect.value)) {
-            row.innerHTML += `<input type="number" placeholder="Priority" min="1" step="1" required>`;
+            row.innerHTML += `<input type="number" placeholder="Priority" min="1" max="40" step="1" required>`;
         }
         processesContainer.appendChild(row);
     }
@@ -322,7 +323,7 @@ function displayChart(canvasId, label, data, chartLabel) {
     function runSimulation() {
         const processData = collectProcessData();
         const selectedAlgorithm = algorithmSelect.value;
-        const timeQuantum = (selectedAlgorithm === "Round Robin") ? parseInt(timeQuantumInput.value, 10) : undefined;
+        const timeQuantum = (selectedAlgorithm === "Round Robin" || selectedAlgorithm === "Priority Round Robin") ? parseInt(timeQuantumInput.value, 10) : undefined;
         console.log(selectedAlgorithm.value);
         console.log(processData);
         console.log(timeQuantum);
@@ -338,13 +339,16 @@ function displayChart(canvasId, label, data, chartLabel) {
         })
         .then(response => response.json())
         .then(data => {
-            if (selectedAlgorithm === "Round Robin"){
-                
+            if (selectedAlgorithm === "Priority Round Robin"){
+                displayResults(data.processes);
+                displaygantayman(data.ganttLog);
+                plotData(data.history);
                 // renderGanttChart(data.ganttLog);
+            } else {
+                displayResults(data.processes);
+                displaygantayman(data.ganttLog);
+                plotData(data.history);
             }
-            displayResults(data.processes);
-            displaygantayman(data.ganttLog);
-            plotData(data.history);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -398,7 +402,6 @@ function displayChart(canvasId, label, data, chartLabel) {
     function resetSimulation() {
         processesContainer.innerHTML = ''; // Clear existing processes
     createProcessInputRow('P1'); // Create the initial process row
-    
     if (window.waitingChart) {
         window.waitingChart.destroy();
         window.waitingChart = null; // Clear the reference
@@ -419,13 +422,19 @@ function displayChart(canvasId, label, data, chartLabel) {
     resetBtn.addEventListener('click', resetSimulation);
 
     algorithmSelect.addEventListener('change', () => {
-        if (algorithmSelect.value === "Round Robin") {
+        if (algorithmSelect.value === "Round Robin" || algorithmSelect.value === "Priority Round Robin") {
             timeQuantumContainer.style.display = 'block';
         } else {
             timeQuantumContainer.style.display = 'none';
         }
         processesContainer.innerHTML = ''; // Reset the input rows
         createProcessInputRow('P1'); // Add initial process row to reflect algorithm choice
+    });
+
+    removeProcessBtn.addEventListener('click', () => {
+        if (processesContainer.children.length > 1) {
+            processesContainer.removeChild(processesContainer.lastElementChild);
+        }
     });
 
     // Initialize with one process row
@@ -563,7 +572,7 @@ function displayChart(canvasId, label, data, chartLabel) {
             algorithmSelect.value = selectedAlgorithm;
             const timeQuantumContainer = document.getElementById('time-quantum-container');
             // Display time quantum input only if Round Robin is selected
-            if (selectedAlgorithm === 'Round Robin') {
+            if (selectedAlgorithm === 'Round Robin' || selectedAlgorithm === 'Priority Round Robin') {
                 timeQuantumContainer.style.display = 'block';
             } else {
                 timeQuantumContainer.style.display = 'none';
